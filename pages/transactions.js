@@ -58,7 +58,7 @@ export default function Transactions() {
           <option value="">Type</option>
           <option value="transfer">Transfer</option>
           <option value="stake">Stake</option>
-          <option value="withdraw">Widthdrawn</option>
+          <option value="withdraw">Withdrawn</option>
         </select>
 
         <select className="border" name="account" value={params.account} onChange={handleFilterChange}>
