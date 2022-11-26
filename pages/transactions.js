@@ -25,13 +25,12 @@ export default function Transactions() {
     if (!router.isReady) {
       return
     }
-    setParams(prevParams => router.query)
+    if (router.query.date || router.query.type || router.query.account || router.query.currency || router.query.sort) {
+      setParams(prevParams => router.query)
+    }
   }, [router.isReady])
 
   useEffect(() => {
-    if (!router.isReady) {
-      return
-    }
     loadTransactions()
   }, [params])
 
@@ -42,10 +41,6 @@ export default function Transactions() {
   const getDateObj = useCallback((timestamp) => {
     return new Date(timestamp * 1000)
   }, [])
-
-  if (!router.isReady) {
-    return <Loading/>
-  }
 
   return (
     <div className="transactions">
