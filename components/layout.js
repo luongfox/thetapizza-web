@@ -19,7 +19,7 @@ export default function Layout({ children }) {
     <div className="container px-3 mx-auto sm:max-w-sm">
       <header className="flex flex-row items-center mt-3">
         <div className="basis-1/4"><Link href="/"><img className="w-8" src="/images/logo.png"/></Link></div>
-        <div className="basis-2/4 font-bold text-2xl text-center"><span>THETA PIZZA</span></div>
+        <div className="basis-2/4 font-bold text-2xl text-center"><Link href="/">THETA PIZZA</Link></div>
         <div className="basis-1/4 text-right">
           <div className="relative inline-block text-left">
             <div><img className="w-7" src="/images/list.svg" onClick={ () => setShowingMenuList(!showingMenuList) }/></div>

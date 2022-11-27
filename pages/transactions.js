@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
 import { THETAPIZZA_API_ENDPOINT } from '../fixtures/constants'
 import Loading from '../components/loading'
+import Head from 'next/head'
 
 export default function Transactions() {
   const router = useRouter()
@@ -12,7 +13,7 @@ export default function Transactions() {
 
   const loadTransactions = useCallback(() => {
     setLoading(prevLoading => true);
-    fetch(THETAPIZZA_API_ENDPOINT + '/transactions?date=' + (params.date ?? '') + '&type=' + (params.type ?? '') + '&account=' + (params.account ?? '') + '&currency=' + (params.currency ?? '') + '&sort=' + (params.sort ?? ''))
+    fetch(THETAPIZZA_API_ENDPOINT + '/transactions?date=' + (params.date ?? '') + '&type=' + (params.type ?? '') + '&account=' + (params.account ?? '') + '&currency=' + (params.currency ?? '') + '&sort=' + (params.sort ?? '') + '&t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setTransactions(prevTransactions => data.data)
@@ -44,6 +45,9 @@ export default function Transactions() {
 
   return (
     <div className="transactions">
+      <Head>
+        <title>Transactions</title>
+      </Head>
       <div className="filter grid gap-2 grid-cols-3 grid-rows-2 my-3">
         <select className="border" name="date" value={params.date} onChange={handleFilterChange}>
           <option value="">Date</option>
