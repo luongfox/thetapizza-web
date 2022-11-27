@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
-import { THETA_EXPLORER_URL, THETAPIZZA_API_ENDPOINT } from '../fixtures/constants'
+import { formatNumber, accountUrl } from '../fixtures/utils'
 import Loading from '../components/loading'
 import Head from 'next/head'
 
@@ -11,7 +10,7 @@ export default function Transactions() {
 
   const loadAccounts = useCallback(() => {
     setLoading(prevLoading => true);
-    fetch(THETAPIZZA_API_ENDPOINT + '/accounts?&t=' + Date.now())
+    fetch(process.env.apiEndpoint + '/accounts?&t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setAccounts(prevAccounts => data.data)
@@ -21,7 +20,7 @@ export default function Transactions() {
 
   const loadValidators = useCallback(() => {
     setLoading(prevLoading => true);
-    fetch(THETAPIZZA_API_ENDPOINT + '/stake/validators?&t=' + Date.now())
+    fetch(process.env.apiEndpoint + '/stake/validators?&t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setValidators(prevTransactions => data.data)

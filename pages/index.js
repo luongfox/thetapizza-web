@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { formatNumber } from '../fixtures/utils'
-import { THETAPIZZA_API_ENDPOINT } from '../fixtures/constants'
 import Loading from '../components/loading'
 import Head from 'next/head'
 
@@ -10,7 +9,7 @@ export default function Index() {
   
   useEffect(() => {
     setLoading(prevLoading => true);
-    fetch(THETAPIZZA_API_ENDPOINT + '/stats?t=' + Date.now())
+    fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setStats(prevStats => data.data)
