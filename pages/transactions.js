@@ -4,9 +4,29 @@ import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
 import Loading from '../components/loading'
 import Head from 'next/head'
 
-export default function Transactions() {
+export async function getServerSideProps(context) {
+  const params = { date: '1D', type: '', account: '', currency: '', sort: 'amount' }
+  if (context.query.date) {
+    params.date = context.query.date
+  }
+  if (context.query.type) {
+    params.type = context.query.type
+  }
+  if (context.query.account) {
+    params.account = context.query.account
+  }
+  if (context.query.currency) {
+    params.currency = context.query.currency
+  }
+  if (context.query.sort) {
+    params.sort = context.query.sort
+  }
+  return { props: { params } }
+}
+
+export default function Transactions({ params: defaultParams }) {
   const router = useRouter()
-  const [params, setParams] = useState({ date: '1D', type: '', account: '', currency: '', sort: 'amount' })
+  const [params, setParams] = useState(defaultParams)
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -20,15 +40,6 @@ export default function Transactions() {
         setLoading(prevLoading => false);
       })
   }, [params])
-
-  useEffect(() => {
-    if (!router.isReady) {
-      return
-    }
-    if (router.query.date || router.query.type || router.query.account || router.query.currency || router.query.sort) {
-      setParams(prevParams => router.query)
-    }
-  }, [router.isReady])
 
   useEffect(() => {
     loadTransactions()
