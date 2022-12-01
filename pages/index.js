@@ -3,23 +3,23 @@ import { formatNumber } from '../fixtures/utils'
 import Loading from '../components/loading'
 import Head from 'next/head'
 
-export default function Index() {
-  const [stats, setStats] = useState({})
-  const [loading, setLoading] = useState(false)
-  
-  useEffect(() => {
-    setLoading(prevLoading => true);
-    fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())
-      .then((res) => res.json())
-      .then((data) => {
-        setStats(prevStats => data.data)
-        setLoading(prevLoading => false);
-      })
-  }, [])
+export async function getServerSideProps() {
+  const result = await fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())
+    .then((res) => res.json())
+  return { props: { stats: result.data } }
+}
 
-  if (!stats.network) {
-    return <Loading/>
-  }
+export default function Index({ stats: defaultStats }) {  
+  const [stats, setStats] = useState(defaultStats);
+  useEffect(() => {
+    setInterval(() => {
+      fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())
+        .then((res) => res.json())
+        .then((data) => {
+          setStats(prevStats => data.data)
+        })
+    }, 15000);
+  }, [])
 
   return (
     <div className="index">
