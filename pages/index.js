@@ -10,6 +10,7 @@ export async function getServerSideProps() {
 
 export default function Index({ stats: defaultStats }) {  
   const [stats, setStats] = useState(defaultStats);
+  
   useEffect(() => {
     setInterval(() => {
       fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())

@@ -27,6 +27,7 @@ export default function Layout({ children }) {
               <div className="py-1">
                 <Link href="/transactions" className="text-gray-700 block px-4 py-1 text-md" onClick={ () => setShowingMenuList(false) }>Transactions</Link>
                 <Link href="/validators" className="text-gray-700 block px-4 py-1 text-md" onClick={ () => setShowingMenuList(false) }>Validators</Link>
+                <Link href="/top-wallets" className="text-gray-700 block px-4 py-1 text-md" onClick={ () => setShowingMenuList(false) }>Top Wallets</Link>
               </div>
             </div>
           </div>
