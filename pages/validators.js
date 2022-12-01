@@ -1,42 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
 import { formatNumber, accountUrl } from '../fixtures/utils'
-import Loading from '../components/loading'
 import Head from 'next/head'
 
-export default function Transactions() {
-  const [accounts, setAccounts] = useState({})
-  const [validators, setValidators] = useState([])
-  const [loading, setLoading] = useState(false)
+export async function getServerSideProps() {
+  const validatorResult = await fetch(process.env.apiEndpoint + '/stake/validators?&t=' + Date.now())
+    .then((res) => res.json())
+  const accountResult = await fetch(process.env.apiEndpoint + '/accounts?&t=' + Date.now())
+    .then((res) => res.json())
+  return { props: { validators: validatorResult.data, accounts: accountResult.data } }
+}
 
-  const loadAccounts = useCallback(() => {
-    setLoading(prevLoading => true);
-    fetch(process.env.apiEndpoint + '/accounts?&t=' + Date.now())
-      .then((res) => res.json())
-      .then((data) => {
-        setAccounts(prevAccounts => data.data)
-        setLoading(prevLoading => false);
-      })
-  }, [])
-
-  const loadValidators = useCallback(() => {
-    setLoading(prevLoading => true);
-    fetch(process.env.apiEndpoint + '/stake/validators?&t=' + Date.now())
-      .then((res) => res.json())
-      .then((data) => {
-        setValidators(prevTransactions => data.data)
-        setLoading(prevLoading => false);
-      })
-  }, [])
-
-  useEffect(() => {
-    loadAccounts();
-    loadValidators()
-  }, [])
-
-  if (Object.keys(accounts).length == 0 || validators.length == 0) {
-    return <Loading/>
-  }
-
+export default function Transactions({ validators, accounts }) {
   return (
     <div className="transactions">
       <Head>

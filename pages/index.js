@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { formatNumber } from '../fixtures/utils'
-import Loading from '../components/loading'
 import Head from 'next/head'
 
 export async function getServerSideProps() {
