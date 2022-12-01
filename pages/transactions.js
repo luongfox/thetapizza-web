@@ -30,6 +30,17 @@ export default function Transactions({ params: defaultParams }) {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    loadTransactions()
+  }, [params])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadTransactions()
+    }, 30000); // 30 seconds
+    return () => clearInterval(interval)
+  }, [params])
+
   const loadTransactions = useCallback(() => {
     setLoading(prevLoading => true);
     fetch(process.env.apiEndpoint + '/transactions?date=' + (params.date ?? '') + '&type=' + (params.type ?? '') + '&account=' + (params.account ?? '') + '&currency=' + (params.currency ?? '') + '&sort=' + (params.sort ?? '') + '&t=' + Date.now())
@@ -39,10 +50,6 @@ export default function Transactions({ params: defaultParams }) {
         router.push({ pathname: '/transactions', query: params }, undefined, { shallow: true })
         setLoading(prevLoading => false);
       })
-  }, [params])
-
-  useEffect(() => {
-    loadTransactions()
   }, [params])
 
   const handleFilterChange = (event) => {

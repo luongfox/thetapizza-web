@@ -17,7 +17,7 @@ export default function Index({ stats: defaultStats }) {
         .then((data) => {
           setStats(prevStats => data.data)
         })
-    }, 15000);
+    }, 15000); // 15 seconds
   }, [])
 
   return (
