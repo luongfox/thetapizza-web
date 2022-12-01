@@ -123,7 +123,7 @@ export default function Transactions({ params: defaultParams }) {
               <a href={ accountUrl(transaction.from) } className="text-blue-500">{ transaction.from_account.length > 0 ? transaction.from_account[0].name : transaction.from }</a><br/>
               <a href={ accountUrl(transaction.to) } className="text-blue-500">{ transaction.to_account.length > 0 ? transaction.to_account[0].name : transaction.to }</a>
             </td>
-            <td className="auto-trim border p-1 text-center">{ formatNumber(transaction.coins, 0) } { transaction.currency }<br/>(${ formatNumber(transaction.usd, 2) })</td>
+            <td className="auto-trim border p-1 text-center">{ formatNumber(transaction.coins, 2, 'auto') } { transaction.currency }<br/>(${ formatNumber(transaction.usd, 2) })</td>
             <td className="border p-1 text-center">
               { (getDateObj(transaction.date).getUTCMonth() + 1).toString().padStart(2, '0') }-{ getDateObj(transaction.date).getDate().toString().padStart(2, '0') }<br/>
               { getDateObj(transaction.date).getHours().toString().padStart(2, '0') }:{ getDateObj(transaction.date).getMinutes().toString().padStart(2, '0') }
