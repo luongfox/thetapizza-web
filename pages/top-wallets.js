@@ -1,6 +1,7 @@
 import { formatNumber, accountUrl } from '../fixtures/utils'
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context) {
   const params = { currency: 'theta' }
@@ -18,8 +19,14 @@ export async function getServerSideProps(context) {
 }
 
 export default function Transactions({ thetaWallets, tfuelWallets, accounts, wallets: defaultWallets, params: defaultParams }) {
+  const router = useRouter()
+
   const [params, setParams] = useState(defaultParams)
   const [wallets, setWallets] = useState(defaultWallets)
+
+  useEffect(() => {
+    router.push({ pathname: '/top-wallets', query: params }, undefined, { shallow: true })
+  }, [params])
 
   const handleCurrencyChange = (event) => {
     setParams(prevParams => ({ ...prevParams, currency: event.target.value }))
