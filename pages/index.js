@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { formatNumber } from '../fixtures/utils'
 import Head from 'next/head'
 
@@ -9,16 +9,30 @@ export async function getServerSideProps() {
 }
 
 export default function Index({ stats: defaultStats }) {  
-  const [stats, setStats] = useState(defaultStats);
+  const [stats, setStats] = useState(defaultStats)
   
   useEffect(() => {
-    setInterval(() => {
-      fetch(process.env.apiEndpoint + '/stats?t=' + Date.now())
-        .then((res) => res.json())
-        .then((data) => {
-          setStats(prevStats => data.data)
-        })
-    }, 15000); // 15 seconds
+    new WebSocket('wss://stream.binance.com:443/ws/thetausdt@ticker').onmessage = (evt) => {
+      setStats(prevStats => {
+        if (evt.data) {
+          const data = JSON.parse(evt.data)
+          prevStats.theta.price = data.c
+          prevStats.theta.price_change_percent_24h = data.P
+        }
+        return { ...prevStats }
+      })
+    };
+
+    new WebSocket('wss://stream.binance.com:443/ws/tfuelusdt@ticker').onmessage = (evt) => {
+      setStats(prevStats => {
+        if (evt.data) {
+          const data = JSON.parse(evt.data)
+          prevStats.tfuel.price = data.c
+          prevStats.tfuel.price_change_percent_24h = data.P
+        }
+        return { ...prevStats }
+      })
+    };
   }, [])
 
   return (
