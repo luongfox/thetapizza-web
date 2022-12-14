@@ -49,6 +49,8 @@ export default function Index({ stats: defaultStats }) {
           <tr><td>Guardians</td><td>{ formatNumber(stats.network.guardians , 0) }</td></tr>
           <tr><td>Elites</td><td>{ formatNumber(stats.network.elites, 0) }</td></tr>
           <tr><td>Active Wallets</td><td>{ formatNumber(stats.network.active_wallets, 0) }</td></tr>
+          <tr><td>Block Height</td><td>{ stats.network.block_height }</td></tr>
+          <tr><td>Blocks 24H</td><td>{ formatNumber(stats.network.blocks_24h, 0) }</td></tr>
           <tr><td>Transactions 24H</td><td>{ formatNumber(stats.network.transactions_24h, 0) }</td></tr>
           </tbody>
         </table>
