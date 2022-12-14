@@ -56,6 +56,12 @@ export default function Transactions({ params: defaultParams }) {
     setParams(prevParams => ({ ...prevParams, [event.target.name]: event.target.value }))
   }
 
+  const handleKeyChange = (event) => {
+    if (event.key === 'Enter') {
+      setParams(prevParams => ({ ...prevParams, [event.target.name]: event.target.value }))
+    }
+  }
+
   const getDateObj = useCallback((timestamp) => {
     return new Date(timestamp * 1000)
   }, [])
@@ -65,8 +71,9 @@ export default function Transactions({ params: defaultParams }) {
       <Head>
         <title>Transactions</title>
       </Head>
-      <div className="filter grid gap-2 grid-cols-3 grid-rows-2 my-3">
-        <select className="border" name="date" value={params.date} onChange={handleFilterChange}>
+      <div className="filter grid gap-2 grid-cols-2 grid-rows-3 my-3">
+        <input type="text" name="account" className="form-input" placeholder="Search by address" onKeyDown={handleKeyChange}/>
+        <select className="border form-select" name="date" value={params.date} onChange={handleFilterChange}>
           <option value="">Date</option>
           <option value="1D">24 hours</option>
           <option value="3D">3 days</option>
