@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
-import Loading from '../components/loading'
+import SearchForm from '../components/search-form'
 import Head from 'next/head'
 
 export async function getServerSideProps(context) {
@@ -28,91 +28,38 @@ export default function Transactions({ params: defaultParams }) {
   const router = useRouter()
   const [params, setParams] = useState(defaultParams)
   const [transactions, setTransactions] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [formIsVisible, setFormIsVisible] = useState(false)
 
   useEffect(() => {
     loadTransactions()
   }, [params])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      loadTransactions()
-    }, 30000); // 30 seconds
-    return () => clearInterval(interval)
-  }, [params])
-
   const loadTransactions = useCallback(() => {
-    setLoading(prevLoading => true);
     fetch(process.env.apiEndpoint + '/transactions?date=' + (params.date ?? '') + '&type=' + (params.type ?? '') + '&account=' + (params.account ?? '') + '&currency=' + (params.currency ?? '') + '&sort=' + (params.sort ?? '') + '&t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setTransactions(prevTransactions => data.data)
         router.push({ pathname: '/transactions', query: params }, undefined, { shallow: true })
-        setLoading(prevLoading => false);
       })
   }, [params])
-
-  const handleFilterChange = (event) => {
-    setParams(prevParams => ({ ...prevParams, [event.target.name]: event.target.value }))
-  }
-
-  const handleKeyChange = (event) => {
-    if (event.key === 'Enter') {
-      setParams(prevParams => ({ ...prevParams, [event.target.name]: event.target.value }))
-    }
-  }
 
   const getDateObj = useCallback((timestamp) => {
     return new Date(timestamp * 1000)
   }, [])
 
   return (
-    <div className="transactions">
+    <div className="transactions mt-3">
       <Head>
         <title>Transactions</title>
       </Head>
-      <div className="filter grid gap-2 grid-cols-2 grid-rows-3 my-3">
-        <input type="text" name="account" className="form-input" placeholder="Search by address" onKeyDown={handleKeyChange}/>
-        <select className="border form-select" name="date" value={params.date} onChange={handleFilterChange}>
-          <option value="">Date</option>
-          <option value="1D">24 hours</option>
-          <option value="3D">3 days</option>
-          <option value="7D">7 days</option>
-          <option value="14D">14 days</option>
-          <option value="30D">30 Days</option>
-        </select>
-
-        <select className="border" name="type" value={params.type} onChange={handleFilterChange}>
-          <option value="">Type</option>
-          <option value="transfer">Transfer</option>
-          <option value="stake">Stake</option>
-          <option value="withdraw">Withdrawn</option>
-        </select>
-
-        <select className="border" name="account" value={params.account} onChange={handleFilterChange}>
-          <option value="">Account</option>
-          <option value="thetalab">ThetaLabs</option>
-          <option value="exchange">Exchanges</option>
-          <option value="validator">Validators</option>
-        </select>
-
-        <select className="border" name="currency" value={params.currency} onChange={handleFilterChange}>
-          <option value="">Currency</option>
-          <option value="theta">Theta</option>
-          <option value="tfuel">Tfuel</option>
-          <option value="tdrop">Tdrop</option>
-        </select>
-
-        <select className="border" name="sort" value={params.sort} onChange={handleFilterChange}>
-          <option value="date">Sort By Date</option>
-          <option value="amount">Sort By Amount</option>
-        </select>
-      </div>
+      { formIsVisible && <SearchForm params={params} setParams={setParams} setFormIsVisible={setFormIsVisible} /> }
       <table className="w-full bg-white border-collapse">
         <thead>
           <tr>
             <th className="col-id w-3/12 border p-1 text-center">
-              { loading ? <Loading/> : '' }
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 inline-block" onClick={() => setFormIsVisible(true)}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+              </svg>
             </th>
             <th className="col-from-to w-3/12 border p-1 text-left">From / To</th>
             <th className="border w-4/12 p-1 text-center">Amount</th>
