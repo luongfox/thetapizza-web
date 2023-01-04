@@ -79,7 +79,7 @@ export default function Index({ stats: defaultStats }) {
           <tr><td>Volume 24H</td><td>${ formatNumber(stats.tfuel.volume_24h , 2, 'auto') } ({ (stats.tfuel.volume_change_percent_24h >= 0 ? '+' : '-') + formatNumber(Math.abs(stats.tfuel.volume_change_percent_24h), 2) + '%' })</td></tr>
           <tr><td>Maket cap</td><td>${ formatNumber(stats.tfuel.market_cap, 2, 'auto') }</td></tr>
           <tr><td>Stakes</td><td>{ formatNumber(stats.tfuel.stakes, 2, 'auto') } ({ formatNumber(stats.tfuel.stakes_percent, 2) + '%' })</td></tr>
-          <tr><td>Supply</td><td>{ formatNumber(stats.tfuel.supply, 3, 'auto') } / Infinite</td></tr>
+          <tr><td>Supply</td><td>{ formatNumber(stats.tfuel.supply, 2, 'M') } / Infinite</td></tr>
           <tr><td>Daily Burnt</td><td>{ formatNumber(stats.tfuel.daily_burnt, 0) }</td></tr>
           </tbody>
         </table>
