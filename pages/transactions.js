@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
 import SearchForm from '../components/search-form'
 import Head from 'next/head'
+import Loading from "../components/loading";
 
 export async function getServerSideProps(context) {
   const params = { date: '1D', type: '', account: '', currency: '', sort: 'amount' }
@@ -29,17 +30,20 @@ export default function Transactions({ params: defaultParams }) {
   const [params, setParams] = useState(defaultParams)
   const [transactions, setTransactions] = useState([])
   const [formIsVisible, setFormIsVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     loadTransactions()
   }, [params])
 
   const loadTransactions = useCallback(() => {
+    setLoading(true)
     fetch(process.env.apiEndpoint + '/transactions?date=' + (params.date ?? '') + '&type=' + (params.type ?? '') + '&account=' + (params.account ?? '') + '&currency=' + (params.currency ?? '') + '&sort=' + (params.sort ?? '') + '&t=' + Date.now())
       .then((res) => res.json())
       .then((data) => {
         setTransactions(prevTransactions => data.data)
         router.push({ pathname: '/transactions', query: params }, undefined, { shallow: true })
+        setLoading(false)
       })
   }, [params])
 
@@ -53,7 +57,7 @@ export default function Transactions({ params: defaultParams }) {
         <title>Transactions</title>
       </Head>
       { formIsVisible && <SearchForm params={params} setParams={setParams} setFormIsVisible={setFormIsVisible} /> }
-      <table className="w-full bg-white border-collapse">
+      <table className="w-full bg-white border-collapse mb-10">
         <thead>
           <tr>
             <th className="col-id w-3/12 border p-1 text-center">
@@ -86,6 +90,7 @@ export default function Transactions({ params: defaultParams }) {
         </tbody>
         ))}
       </table>
+      { loading && <Loading /> }
     </div>
   )
 }
