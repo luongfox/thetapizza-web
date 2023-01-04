@@ -4,7 +4,7 @@ export default function SearchForm({ params, setParams, setFormIsVisible }) {
     setParams({
       date: data.get('date'),
       type: data.get('type'),
-      account: data.get('account'),
+      account: data.get('account') ? data.get('account') : data.get('account2'),
       currency: data.get('currency'),
       sort: data.get('sort')
     })
@@ -38,7 +38,7 @@ export default function SearchForm({ params, setParams, setFormIsVisible }) {
                   <option value="withdraw">Withdrawn</option>
                 </select>
 
-                <select className="border" name="account" defaultValue={params.account}>
+                <select className="border" name="account2" defaultValue={params.account}>
                   <option value="">Account</option>
                   <option value="thetalab">ThetaLabs</option>
                   <option value="exchange">Exchanges</option>
