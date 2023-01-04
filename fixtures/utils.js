@@ -9,7 +9,7 @@ export function accountUrl(accountId) {
 }
 
 export function formatNumber(number, precision = 0, unit = '') {
-  let unit2 = unit
+  let unit2 = ''
   if (unit == 'auto') {
     if (number >= 1000000000) {
       unit2 = 'B'
@@ -18,6 +18,8 @@ export function formatNumber(number, precision = 0, unit = '') {
     } else if (number >= 1000) {
       unit2 = 'K'
     }
+  } else {
+    unit2 = unit
   }
   let number2 = parseFloat(number)
   if (unit2 == 'B') {
