@@ -9,6 +9,12 @@ export default function SearchForm({ params, setParams, setFormIsVisible }) {
       sort: data.get('sort')
     })
     setFormIsVisible(false)
+
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+      'event': 'search',
+      'search_term': data.get('currency')
+    })
   }
   return (
     <div className="fixed z-10 overflow-y-auto top-0 w-full left-0" id="searchFormModel">
