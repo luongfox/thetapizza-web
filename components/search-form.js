@@ -13,7 +13,7 @@ export default function SearchForm({ params, setParams, setFormIsVisible }) {
     window.dataLayer = window.dataLayer || [];
     dataLayer.push({
       'event': 'search',
-      'search_term': data.get('currency')
+      'search_term': 'transactions'
     })
   }
   return (
