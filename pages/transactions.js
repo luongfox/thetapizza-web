@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { formatNumber, transactionUrl, accountUrl } from '../fixtures/utils'
 import SearchForm from '../components/search-form'
 import Head from 'next/head'
-import Loading from "../components/loading";
+import Loading from '../components/loading'
 
 export async function getServerSideProps(context) {
   const params = { date: '1D', type: '', account: '', currency: '', sort: 'amount' }
@@ -47,6 +47,10 @@ export default function Transactions({ params: defaultParams }) {
       })
   }, [params])
 
+  const trace = useCallback((account) => {
+    location.href = '/trace?account=' + account
+  }, [])
+
   const getDateObj = useCallback((timestamp) => {
     return new Date(timestamp * 1000)
   }, [])
@@ -81,7 +85,11 @@ export default function Transactions({ params: defaultParams }) {
               <a href={ accountUrl(transaction.from) } className="text-blue-500">{ transaction.from_account.length > 0 ? transaction.from_account[0].name : transaction.from }</a><br/>
               <a href={ accountUrl(transaction.to) } className="text-blue-500">{ transaction.to_account.length > 0 ? transaction.to_account[0].name : transaction.to }</a>
             </td>
-            <td className="auto-trim border p-1 text-center">{ formatNumber(transaction.coins, 2, 'auto') } { transaction.currency }<br/>(${ formatNumber(transaction.usd, 2) })</td>
+            <td className="auto-trim border p-1 text-center">
+              <a onClick={ () => trace(transaction.from) }>{ formatNumber(transaction.coins, 2, 'auto') } { transaction.currency }</a>
+              <br/>
+              <a onClick={ () => trace(transaction.to) }>(${ formatNumber(transaction.usd, 2) })</a>
+            </td>
             <td className="border p-1 text-center">
               { (getDateObj(transaction.date).getUTCMonth() + 1).toString().padStart(2, '0') }-{ getDateObj(transaction.date).getDate().toString().padStart(2, '0') }<br/>
               { getDateObj(transaction.date).getHours().toString().padStart(2, '0') }:{ getDateObj(transaction.date).getMinutes().toString().padStart(2, '0') }
