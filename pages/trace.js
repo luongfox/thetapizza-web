@@ -6,9 +6,9 @@ import { useCallback, useEffect, useState } from 'react'
 export async function getServerSideProps(context) {
   const params = {
     account: context.query.account,
-    type: '',
-    currency: '',
-    flow: 'next',
+    type: context.query.type ?? '',
+    currency: context.query.currency ?? '',
+    flow: context.query.flow ?? 'next',
     minUsd: context.query.min_usd ?? 10000
   }
   const accountResult = await fetch(process.env.apiEndpoint + '/accounts?&t=' + Date.now())
