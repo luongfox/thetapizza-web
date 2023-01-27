@@ -28,16 +28,16 @@ export default function Trace({ params: defaultParams, accounts }) {
       .then((res) => {
         setData(prevData => {
           const newData = prevData
-          newData.set(params.account, res.data)
+          newData.set(params.account + '_' + params.flow, res.data)
           return newData
         })
         setLoading(false)
       })
   }, [params])
 
-  const details = useCallback((account) => {
+  const details = useCallback((account, flow) => {
     setParams(oldParams => {
-      return { ...oldParams, account: account }
+      return { ...oldParams, account: account, flow: flow }
     })
   }, [])
 
@@ -66,10 +66,10 @@ export default function Trace({ params: defaultParams, accounts }) {
       <div className="mt-2">
       { Array.from(data.keys()).map((acc, i) => (
         <div key={ i } className="node mt-4">
-          <div className="name font-bold">{ getAccountName(acc) }</div>
+          <div className="name font-bold"><a onClick={ () => details(acc.split('_')[0], 'prev') }>{ getAccountName(acc.split('_')[0]) }</a> ({ acc.split('_')[1] == 'next' ? 'sender' : 'recipient' })</div>
           <div className="children text-sm">
             { data.get(acc).map((child, i2) => (
-              <div key={ i2 }> -&gt; <a href={ accountUrl(child.to) } className="text-blue-500">{ getAccountName(child.to) }</a>, { child.type_name.split('_')[0] }, <a onClick={ () => details(child.to) }>{ formatNumber(child.coins, 1, 'auto') } { child.currency }</a>, { getDateObj(child.date).getUTCFullYear() + '-' + (getDateObj(child.date).getUTCMonth() + 1) + '-' + getDateObj(child.date).getUTCDate() }</div>
+              <div key={ i2 }> -&gt; <a href={ accountUrl(acc.split('_')[1] == 'next' ? child.to : child.from) } className="text-blue-500">{ getAccountName(acc.split('_')[1] == 'next' ? child.to : child.from) }</a>, { child.type_name.split('_')[0] }, <a onClick={ () => details(acc.split('_')[1] == 'next' ? child.to : child.from, 'next') }>{ formatNumber(child.coins, 1, 'auto') } { child.currency }</a>, { getDateObj(child.date).getUTCFullYear() + '-' + (getDateObj(child.date).getUTCMonth() + 1) + '-' + getDateObj(child.date).getUTCDate() }</div>
             ))}
           </div>
         </div>
