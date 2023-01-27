@@ -9,7 +9,7 @@ export async function getServerSideProps(context) {
     type: context.query.type ?? '',
     currency: context.query.currency ?? '',
     flow: context.query.flow ?? 'next',
-    minUsd: context.query.min_usd ?? 10000
+    minUsd: context.query.min_usd ?? 50000
   }
   const accountResult = await fetch(process.env.apiEndpoint + '/accounts?&t=' + Date.now())
     .then((res) => res.json())
